@@ -1,3 +1,20 @@
+# Terraform local state and runtime files
 .terraform/
-*.tfstate*
-.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+
+# Sensitive variables and secret override files
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Local keys, certificates, and credential dumps
+*.pem
+*.key
+*.pfx
+secrets.json
