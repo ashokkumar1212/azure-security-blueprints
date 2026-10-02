@@ -1,0 +1,25 @@
+rule Scattered_Spider_Credential_Harvesting_Detection {
+  meta:
+    author = "Ashok Kumar - Principal Security Architect"
+    description = "Detects failed logins followed by rapid access to virtualization consoles or SharePoint architecture searches."
+    severity = "CRITICAL"
+
+  events:
+    $failed_login.metadata.event_type = "USER_LOGIN"
+    $failed_login.security_result.summary = "AUTH_FAILURE"
+    $failed_login.principal.user.userid = $user
+
+    $file_access.metadata.event_type = "USER_RESOURCE_ACCESS"
+    $file_access.target.resource.name = /.*(architecture|vcenter|vmdk|ntds).*/ nocase
+    $file_access.principal.user.userid = $user
+
+  match:
+    $user over 1h
+
+  outcome:
+    $failed_login_count = count($failed_login.metadata.id)
+    $impact_score = max(85)
+
+  condition:
+    $failed_login and $file_access
+}
